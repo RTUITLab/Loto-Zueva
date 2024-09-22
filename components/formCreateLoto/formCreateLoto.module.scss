@@ -1,0 +1,119 @@
+.Form
+{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  > fieldset
+  {
+    width: 100%;
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 16px;
+    > article
+    {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    > div
+    {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      gap: 8px;
+      > *
+      {
+        width: 100%;
+        height: 28px;
+      }
+    }
+  }
+}
+
+.TableArticle
+{
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  align-items: flex-end !important;
+  gap: 24px !important;
+  > article
+  {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 24px;
+  }
+}
+
+.Table
+{
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 64px);
+  grid-template-rows: repeat(3, 64px);
+  gap: 8px;
+}
+
+.RowsTitle
+{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  > div
+  {
+    height: 64px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    > h4
+    {
+      white-space: nowrap;
+    }
+  }
+}
+
+.ColumnTitle
+{
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  > div
+  {
+    width: 64px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    > h4
+    {
+      white-space: nowrap;
+      writing-mode: vertical-lr;
+      text-orientation: upright;
+      letter-spacing: 0;
+    }
+  }
+}
+
+.Heading
+{
+  width: 100%;
+  height: 28px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}

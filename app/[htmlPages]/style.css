@@ -1,0 +1,177 @@
+.layout{
+    position: relative;
+    width:2213px;
+    height:975px;
+    outline: solid 1px black;
+}
+
+p, div{
+    position: absolute;
+    font-family: 'Courier New', Courier;
+}
+
+.mini-title{
+    position: absolute;
+    top:130px;
+    left:713px;
+    font-size: 64px;
+    font-weight: 600;
+}
+.IIT{
+    position: absolute;
+    top:114px;
+    left:1245px;
+    font-size: 84px;
+    font-weight:600 ;
+}
+
+.ticket{
+    top: 114px;
+    left: 60px;
+    display: flex;
+    gap:32px;
+    font-weight: 600;
+}
+.ticket div{
+    position: relative;
+}
+.title-ticket{
+    position: relative;
+    font-size: 84px;
+}
+.ticket-num{
+    position: relative;
+    font-size: 84px;
+}
+
+
+.text{
+    font-size: 44px;
+}
+
+
+
+.description{
+    position: absolute;
+    left:60px;
+    top:255px;
+    width:572px;
+    height:504px;
+    font-size:36px;
+    line-height: 40px;
+    text-align:justify;
+    margin-bottom: 8px;
+}
+
+.mirea{
+    position: absolute;
+    top:103px;
+    right:61px;
+}
+.iit{
+    width:120px;
+    height:120px;
+    position: absolute;
+    top:260px;
+    left:713px;
+}
+.itlab{
+    position: absolute;
+    left:60px;
+    bottom:54px;
+}
+.year{
+    position: absolute;
+    top:126px;
+    right:478px;
+}
+
+
+.art{
+    position: absolute;
+}
+.art-1{
+    left: 420px;
+    bottom:0px;
+}
+.art-2{
+    top:87px;
+    right:210px;
+}
+
+.gifts{
+    display: flex;
+}
+.vertical-g{
+    bottom:125px;
+    right:1404px;
+    flex-direction: column;
+    gap:88px;
+}
+.horizontal-g{
+    flex-direction: row;
+    right:85px;
+    bottom:635px;
+    gap:160px;
+}
+
+.start{
+    font-weight:600;
+    top: 360px;
+    left: 866px;
+}
+.end{
+    font-weight:600;
+    right: 78px;
+    bottom: 39px;
+}
+
+.table{
+    width:1280px;
+    height:456px;
+    position: absolute;
+    bottom:105px;
+    right: 60px;
+    display: flex;
+    flex-direction: row;
+    gap:16px;
+}
+.table .unit{
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    gap:16px;
+}
+.column{
+    position: inherit;
+    display: flex;
+    flex-direction: column;
+    gap:48px;
+}
+.black, .zero{
+    display: block;
+    width:120px;
+    height: 120px;
+    position: inherit;
+}
+.arrow{
+    width:80px;
+    height:456px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    gap:0px;
+}
+input {
+    outline: solid 1px black;
+    width:200px;
+    margin: 12px;
+    padding:12px;
+    border-radius: 12px;
+    border: 3px solid blue;
+}
+input:focus, input:active, input:hover, input:checked{
+    outline: solid 3px rgb(161, 75, 241);
+}
