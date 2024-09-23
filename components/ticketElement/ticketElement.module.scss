@@ -1,0 +1,43 @@
+.TicketElement {
+  width: 100% !important;
+  background-color: #d8d8d8;
+  height: 40px !important;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  > div
+  {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    > button, > a
+    {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      background-color: #fff;
+      border: 1px solid #4f4f4f;
+      border-radius: 4px;
+      > img
+      {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  > article
+  {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
+  }
+}

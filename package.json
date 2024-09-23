@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "next": "14.2.13",
+    "print-js": "^1.6.0",
     "react": "^18",
     "react-dom": "^18",
     "sass": "^1.79.3",

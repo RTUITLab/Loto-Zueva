@@ -1,12 +1,13 @@
 'use client';
 import Style from './formCreateLoto.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CategoryElement from '@/components/categoryElement';
 import { getData, openDB, replaceData } from '@/utils/indexedDB';
 import LotoElement from '@/components/lotoElement';
 import random from '@/utils/random';
 import generator, { Ticket } from '@/utils/generator';
 import { checkTicketMatches } from '@/utils/check';
+import TicketElement from '@/components/ticketElement';
 
 export default function FormCreateLoto() {
   const [db, setDb] = useState<IDBDatabase | null>(null);
@@ -22,9 +23,20 @@ export default function FormCreateLoto() {
   const [tableElement, setTableElement] = useState<boolean[][] | null>(null);
   const [inputValue, setInputValue] = useState<string>('0');
   const [ticket, setTicket] = useState<Ticket[] | null>(null);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const [maxValue, setMaxValue] = useState<string>('1');
+  const [minValue, setMinValue] = useState<string>('1');
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
+  };
+
+  const handleMaxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxValue(event.target.value);
+  };
+
+  const handleMinChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setMinValue(event.target.value);
   };
 
   useEffect(() => {
@@ -100,6 +112,18 @@ export default function FormCreateLoto() {
         });
     }
   }, [db]);
+
+  useEffect(() => {
+    if (ticket) {
+      fetch('/server', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(ticket),
+      });
+    }
+  }, [ticket]);
 
   useEffect(() => {
     if (db && db.objectStoreNames.contains('quantity')) {
@@ -224,6 +248,60 @@ export default function FormCreateLoto() {
     return sum;
   }
 
+  const printPages: { type: string; link: string }[] = ticket
+    ? ticket.map((elem, index) => {
+        return {
+          type: checkTicketMatches(
+            elem,
+            tableElement ? tableElement : [[]],
+            categoryColumns.map((elem) => elem.title),
+            categoryRows.map((elem) => elem.title),
+          ),
+          link: '/' + (index + 1),
+        };
+      })
+    : [];
+
+  const typePrint: string[] = [...categoryRows.map((elem) => elem.title), ...categoryColumns.map((elem) => elem.title)];
+
+  const printMultiplePages = useCallback(
+    (printPages: string[]) => {
+      if (isPrinting) return; // блокируем повторный запуск
+      setIsPrinting(true);
+
+      let index = 0;
+
+      const printNextPage = () => {
+        if (index >= printPages.length) {
+          setIsPrinting(false); // разблокируем, когда все страницы напечатаны
+          return;
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = printPages[index];
+
+        iframe.onload = () => {
+          if (iframe.contentWindow) {
+            iframe.contentWindow.focus();
+            iframe.contentWindow.print();
+
+            iframe.contentWindow.onafterprint = () => {
+              document.body.removeChild(iframe); // удаляем iframe
+              index++; // увеличиваем индекс
+              printNextPage(); // печатаем следующую страницу
+            };
+          }
+        };
+
+        document.body.appendChild(iframe);
+      };
+
+      printNextPage(); // запускаем печать первой страницы
+    },
+    [isPrinting],
+  );
+
   return (
     <form ref={refForm} className={Style.Form}>
       <fieldset>
@@ -330,18 +408,67 @@ export default function FormCreateLoto() {
             }>
             <h4>Сгенерировать билеты</h4>
           </button>
-          {ticket &&
-            ticket.map((item, index) => (
-              <h4 key={'ticket_' + index}>
-                Билет №{index + 1} |{' '}
-                {checkTicketMatches(
-                  item,
-                  tableElement ? tableElement : [[]],
-                  categoryColumns.map((elem) => elem.title),
-                  categoryRows.map((elem) => elem.title),
-                )}
-              </h4>
-            ))}
+          {ticket && (
+            <>
+              <div className={Style.Heading}>
+                <h4>Печать</h4>
+              </div>
+              <article className={Style.DivArticle}>
+                <button onClick={() => printMultiplePages(printPages.map((elem) => elem.link))} disabled={isPrinting}>
+                  <h4>Напечатать все билеты</h4>
+                </button>
+                {typePrint.map((elem, index) => (
+                  <button
+                    key={'print_button_' + index}
+                    onClick={() => printMultiplePages(printPages.filter((elem2) => elem === elem2.type).map((elem3) => elem3.link))}
+                    disabled={isPrinting}>
+                    <h4>Напечатать все билеты c призом &quot;{elem}&quot;</h4>
+                  </button>
+                ))}
+                <div className={Style.Input}>
+                  <article>
+                    <h4>С какого билета печатать</h4>
+                    <h4>По какой билет включительно печатать</h4>
+                    <h4 />
+                  </article>
+                  <div>
+                    <input type="number" value={minValue} onChange={handleMinChange} placeholder="Введите с какого билета начать печать" />
+                    <input
+                      type="number"
+                      value={maxValue}
+                      onChange={handleMaxChange}
+                      placeholder="Введите до какого включительно печатать"
+                    />
+                    <button
+                      onClick={() =>
+                        Number(minValue) > 0 && Number(maxValue) >= Number(minValue)
+                          ? printMultiplePages(
+                              printPages
+                                .filter((elem, index) => Number(minValue) <= index + 1 && index + 1 <= Number(maxValue))
+                                .map((elem) => elem.link),
+                            )
+                          : console.log('error')
+                      }
+                      disabled={isPrinting}>
+                      <h4>Печать</h4>
+                    </button>
+                  </div>
+                </div>
+              </article>
+              {ticket.map((item, index) => (
+                <TicketElement
+                  key={'ticket_' + index}
+                  number={index + 1}
+                  type={checkTicketMatches(
+                    item,
+                    tableElement ? tableElement : [[]],
+                    categoryColumns.map((elem) => elem.title),
+                    categoryRows.map((elem) => elem.title),
+                  )}
+                />
+              ))}
+            </>
+          )}
         </div>
         <article className={Style.TableArticle}>
           <div className={Style.RowsTitle}>
